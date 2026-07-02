@@ -7,12 +7,8 @@
 [![GitHub stars](https://img.shields.io/github/stars/sunnybharti072006/TaskManager?style=for-the-badge)](https://github.com/sunnybharti072006/TaskManager/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/sunnybharti072006/TaskManager?style=for-the-badge)](https://github.com/sunnybharti072006/TaskManager/network)
 [![GitHub issues](https://img.shields.io/github/issues/sunnybharti072006/TaskManager?style=for-the-badge)](https://github.com/sunnybharti072006/TaskManager/issues)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE) <!-- TODO: Verify and add actual license file -->
 
 **A robust full-stack application for efficient task management and organization.**
-
-[Live Demo](https://demo.taskmanager.com) <!-- TODO: Add live demo link if available --> |
-[API Documentation](https://documenter.getpostman.com/view/YOUR_ID/YOUR_COLLECTION_ID) <!-- TODO: Publish Postman collection and add link -->
 
 </div>
 
@@ -32,13 +28,6 @@ This repository contains the complete codebase for both the backend service and 
 -   📦 **Modular Project Structure:** Clear separation between frontend and backend components for maintainability and scalability.
 -   🧪 **API Testing with Postman:** Includes a Postman collection for convenient testing and exploration of backend endpoints.
 
-## 🖥️ Screenshots
-
-![Screenshot 1](https://raw.githubusercontent.com/sunnybharti072006/TaskManager/main/docs/screenshot1.png) <!-- TODO: Add actual screenshots of the application -->
-*Dashboard View*
-
-![Screenshot 2](https://raw.githubusercontent.com/sunnybharti072006/TaskManager/main/docs/screenshot2.png) <!-- TODO: Add actual screenshots of key features (e.g., task creation, login) -->
-*Task List View*
 
 ## 🛠️ Tech Stack
 
@@ -46,8 +35,7 @@ This repository contains the complete codebase for both the backend service and 
 -   ![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
 -   ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
 -   ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
--   **[Frontend Framework]**: ![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black) / ![Vue.js](https://img.shields.io/badge/Vue.js-4FC08D?style=for-the-badge&logo=vuedotjs&logoColor=white) / ![Angular](https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white) <!-- TODO: Detect and specify actual frontend framework (e.g., React, Vue, Angular) if a package.json exists in 'frontend' -->
--   **Build Tool**: ![npm](https://img.shields.io/badge/npm-CB3837?style=for-the-badge&logo=npm&logoColor=white) / ![Yarn](https://img.shields.io/badge/Yarn-2C8EBB?style=for-the-badge&logo=yarn&logoColor=white) <!-- TODO: Detect and specify actual package manager if a package.json exists in 'frontend' -->
+- 
 
 **Backend:**
 -   ![Java](https://img.shields.io/badge/Java-007396?style=for-the-badge&logo=java&logoColor=white)
