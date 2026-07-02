@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Task Manager</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, Arial, sans-serif; max-width: 700px; margin: 40px auto; background: #0f1117; color: #eee; padding: 0 16px; }
+  h1 { font-size: 22px; }
+  .card { background: #1a1d27; padding: 20px; border-radius: 10px; margin-bottom: 20px; }
+  input, select, textarea { width: 100%; padding: 10px; margin: 6px 0; border-radius: 6px; border: 1px solid #333; background: #0f1117; color: #eee; }
+  button { padding: 10px 16px; border: none; border-radius: 6px; background: #4f7cff; color: white; cursor: pointer; margin-top: 8px; }
+  button.danger { background: #ff4f4f; }
+  button.secondary { background: #333; }
+  .task { background: #1a1d27; padding: 14px; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+  .msg { padding: 10px; border-radius: 6px; margin: 10px 0; font-size: 14px; }
+  .msg.error { background: #4a1d1d; color: #ff8080; }
+  .msg.success { background: #1d4a2a; color: #7cffa0; }
+  .status-badge { font-size: 11px; padding: 3px 8px; border-radius: 10px; background: #333; }
+  #app-section { display: none; }
+</style>
+</head>
+<body>
+
+<h1>📋 Task Manager</h1>
+
+<div id="msg-box"></div>
+
+<!-- AUTH SECTION -->
+<div id="auth-section" class="card">
+  <div id="login-form">
+    <h3>Login</h3>
+    <input type="email" id="login-email" placeholder="Email">
+    <input type="password" id="login-password" placeholder="Password">
+    <button onclick="login()">Login</button>
+    <button class="secondary" onclick="toggleForm()">Need an account? Register</button>
+  </div>
+
+  <div id="register-form" style="display:none">
+    <h3>Register</h3>
+    <input type="text" id="reg-name" placeholder="Name">
+    <input type="email" id="reg-email" placeholder="Email">
+    <input type="password" id="reg-password" placeholder="Password (min 6 chars)">
+    <button onclick="register()">Register</button>
+    <button class="secondary" onclick="toggleForm()">Already have an account? Login</button>
+  </div>
+</div>
+
+<!-- APP SECTION -->
+<div id="app-section">
+  <div class="card">
+    <strong id="welcome-text"></strong>
+    <button class="secondary" style="float:right" onclick="logout()">Logout</button>
+  </div>
+
+  <div class="card">
+    <h3>Add Task</h3>
+    <input type="text" id="task-title" placeholder="Task title">
+    <textarea id="task-desc" placeholder="Description"></textarea>
+    <button onclick="createTask()">Add Task</button>
+  </div>
+
+  <div class="card">
+    <h3>My Tasks</h3>
+    <div id="task-list">Loading...</div>
+  </div>
+</div>
+
+<script>
+const API_BASE = "http://localhost:8080/api/v1";
+let token = localStorage.getItem("token");
+let userName = localStorage.getItem("userName");
+
+function showMsg(text, type) {
+  document.getElementById("msg-box").innerHTML = `<div class="msg ${type}">${text}</div>`;
+  setTimeout(() => document.getElementById("msg-box").innerHTML = "", 4000);
+}
+
+function toggleForm() {
+  document.getElementById("login-form").style.display =
+    document.getElementById("login-form").style.display === "none" ? "block" : "none";
+  document.getElementById("register-form").style.display =
+    document.getElementById("register-form").style.display === "none" ? "block" : "none";
+}
+
+async function register() {
+  const name = document.getElementById("reg-name").value;
+  const email = document.getElementById("reg-email").value;
+  const password = document.getElementById("reg-password").value;
+  try {
+    const res = await fetch(`${API_BASE}/auth/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, password })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Registration failed");
+    showMsg("Registered successfully! Please login.", "success");
+    toggleForm();
+  } catch (e) {
+    showMsg(e.message, "error");
+  }
+}
+
+async function login() {
+  const email = document.getElementById("login-email").value;
+  const password = document.getElementById("login-password").value;
+  try {
+    const res = await fetch(`${API_BASE}/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Login failed");
+    token = data.token;
+    userName = data.name;
+    localStorage.setItem("token", token);
+    localStorage.setItem("userName", userName);
+    showApp();
+  } catch (e) {
+    showMsg(e.message, "error");
+  }
+}
+
+function logout() {
+  localStorage.removeItem("token");
+  localStorage.removeItem("userName");
+  token = null;
+  document.getElementById("app-section").style.display = "none";
+  document.getElementById("auth-section").style.display = "block";
+}
+
+function showApp() {
+  document.getElementById("auth-section").style.display = "none";
+  document.getElementById("app-section").style.display = "block";
+  document.getElementById("welcome-text").innerText = `Welcome, ${userName}`;
+  loadTasks();
+}
+
+async function loadTasks() {
+  try {
+    const res = await fetch(`${API_BASE}/tasks`, {
+      headers: { "Authorization": `Bearer ${token}` }
+    });
+    if (res.status === 401) { logout(); return; }
+    const tasks = await res.json();
+    const list = document.getElementById("task-list");
+    list.innerHTML = tasks.length ? "" : "<p>No tasks yet.</p>";
+    tasks.forEach(t => {
+      list.innerHTML += `
+        <div class="task">
+          <div>
+            <strong>${t.title}</strong> <span class="status-badge">${t.status}</span>
+            <p style="margin:4px 0 0;font-size:13px;color:#aaa">${t.description || ""}</p>
+          </div>
+          <button class="danger" onclick="deleteTask(${t.id})">Delete</button>
+        </div>`;
+    });
+  } catch (e) {
+    showMsg("Failed to load tasks", "error");
+  }
+}
+
+async function createTask() {
+  const title = document.getElementById("task-title").value;
+  const description = document.getElementById("task-desc").value;
+  if (!title) { showMsg("Title is required", "error"); return; }
+  try {
+    const res = await fetch(`${API_BASE}/tasks`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+      body: JSON.stringify({ title, description })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || "Failed to create task");
+    document.getElementById("task-title").value = "";
+    document.getElementById("task-desc").value = "";
+    showMsg("Task added!", "success");
+    loadTasks();
+  } catch (e) {
+    showMsg(e.message, "error");
+  }
+}
+
+async function deleteTask(id) {
+  try {
+    const res = await fetch(`${API_BASE}/tasks/${id}`, {
+      method: "DELETE",
+      headers: { "Authorization": `Bearer ${token}` }
+    });
+    if (!res.ok) throw new Error("Failed to delete task");
+    showMsg("Task deleted", "success");
+    loadTasks();
+  } catch (e) {
+    showMsg(e.message, "error");
+  }
+}
+
+// Auto-login if token exists
+if (token) showApp();
+</script>
+</body>
+</html>

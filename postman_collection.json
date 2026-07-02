@@ -1,0 +1,178 @@
+{
+  "info": {
+    "name": "Task Manager API - Primetrade Assignment",
+    "description": "Backend Developer Intern Assignment - Task Manager REST API with JWT auth & Role-Based Access Control.\n\nHOW TO USE:\n1. Run 'Register' or 'Login' first (no token needed)\n2. Copy the 'token' from the response\n3. Paste it into the collection variable 'token' (top-right Variables tab)\n4. All Task/Admin requests will now use that token automatically",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8080/api/v1" },
+    { "key": "token", "value": "", "description": "Paste JWT token here after Register/Login" },
+    { "key": "task_id", "value": "1", "description": "ID of the task to Get/Update/Delete" }
+  ],
+  "item": [
+    {
+      "name": "1. Auth (No token required)",
+      "item": [
+        {
+          "name": "[POST] Register - create new user",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Bharti Sunny\",\n  \"email\": \"bharti@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "register"]
+            },
+            "description": "METHOD: POST\nPURPOSE: Creates a new user account with role USER by default.\nAUTH: Not required.\nRETURNS: JWT token + user details. Copy the token for all future requests."
+          },
+          "response": []
+        },
+        {
+          "name": "[POST] Login - get JWT token",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"bharti@example.com\",\n  \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "METHOD: POST\nPURPOSE: Logs in an existing user and returns a fresh JWT token.\nAUTH: Not required.\nRETURNS: JWT token + user details."
+          },
+          "response": []
+        }
+      ],
+      "description": "Public endpoints - no Authorization header needed"
+    },
+    {
+      "name": "2. Tasks CRUD (Token required)",
+      "item": [
+        {
+          "name": "[POST] Create Task",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Complete assignment\",\n  \"description\": \"Finish Primetrade backend task\",\n  \"status\": \"PENDING\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/tasks",
+              "host": ["{{base_url}}"],
+              "path": ["tasks"]
+            },
+            "description": "METHOD: POST\nPURPOSE: Creates a new task owned by the logged-in user.\nAUTH: Required (Bearer token).\nSTATUS VALUES: PENDING, IN_PROGRESS, COMPLETED\nRETURNS: 201 Created + the new task (note the 'id' - use it as task_id below)."
+          },
+          "response": []
+        },
+        {
+          "name": "[GET] Get All Tasks",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/tasks",
+              "host": ["{{base_url}}"],
+              "path": ["tasks"]
+            },
+            "description": "METHOD: GET\nPURPOSE: Returns all tasks belonging to the logged-in user. If the user is ADMIN, returns ALL tasks from every user.\nAUTH: Required (Bearer token).\nNo body needed."
+          },
+          "response": []
+        },
+        {
+          "name": "[GET] Get Task by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/tasks/{{task_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["tasks", "{{task_id}}"]
+            },
+            "description": "METHOD: GET\nPURPOSE: Fetches a single task by its ID.\nAUTH: Required (Bearer token). Only the task owner or an ADMIN can view it - others get 403 Forbidden.\nNo body needed."
+          },
+          "response": []
+        },
+        {
+          "name": "[PUT] Update Task",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Complete assignment\",\n  \"description\": \"Done and tested\",\n  \"status\": \"COMPLETED\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/tasks/{{task_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["tasks", "{{task_id}}"]
+            },
+            "description": "METHOD: PUT\nPURPOSE: Updates title, description, and/or status of an existing task.\nAUTH: Required (Bearer token). Only the task owner or an ADMIN can update it.\nRETURNS: 200 OK + updated task."
+          },
+          "response": []
+        },
+        {
+          "name": "[DELETE] Delete Task",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/tasks/{{task_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["tasks", "{{task_id}}"]
+            },
+            "description": "METHOD: DELETE\nPURPOSE: Permanently deletes a task.\nAUTH: Required (Bearer token). Only the task owner or an ADMIN can delete it.\nRETURNS: 204 No Content (empty body = success)."
+          },
+          "response": []
+        }
+      ],
+      "description": "All requests here need Authorization: Bearer {{token}} - set the 'token' variable first via Register/Login"
+    },
+    {
+      "name": "3. Admin (ADMIN role required)",
+      "item": [
+        {
+          "name": "[GET] Get All Users - Admin only",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{base_url}}/admin/users",
+              "host": ["{{base_url}}"],
+              "path": ["admin", "users"]
+            },
+            "description": "METHOD: GET\nPURPOSE: Lists every registered user. Demonstrates role-based access control.\nAUTH: Required, and the logged-in user's role must be ADMIN.\nIf role is USER -> 403 Forbidden (expected, proves RBAC works).\nTo make yourself ADMIN, run in Postgres:\nUPDATE users SET role='ADMIN' WHERE email='your_email';\nThen login again to get a fresh token with the ADMIN role."
+          },
+          "response": []
+        }
+      ],
+      "description": "Requires role ADMIN - regular USER role gets 403 Forbidden here"
+    }
+  ]
+}
