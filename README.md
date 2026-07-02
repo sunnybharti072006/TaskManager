@@ -1,11 +1,7 @@
 # 🚀 TaskManager Full-Stack Application
 
 <div align="center">
-[![GitHub stars](https://img.shields.io/github/stars/sunnybharti072006/TaskManager?style=for-the-badge)](https://github.com/sunnybharti072006/TaskManager/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/sunnybharti072006/TaskManager?style=for-the-badge)](https://github.com/sunnybharti072006/TaskManager/network)
-[![GitHub issues](https://img.shields.io/github/issues/sunnybharti072006/TaskManager?style=for-the-badge)](https://github.com/sunnybharti072006/TaskManager/issues)
-
-**A robust full-stack application for efficient task management and organization.**
+<img width="1280" height="640" alt="image" src="https://github.com/user-attachments/assets/d540ccff-6a08-4403-85e4-51c2a16ff531" />
 
 </div>
 
