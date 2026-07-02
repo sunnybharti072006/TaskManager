@@ -1,9 +1,6 @@
 # 🚀 TaskManager Full-Stack Application
 
 <div align="center">
-
-![TaskManager Logo](https://raw.githubusercontent.com/sunnybharti072006/TaskManager/main/docs/logo.png) <!-- TODO: Add actual project logo and path -->
-
 [![GitHub stars](https://img.shields.io/github/stars/sunnybharti072006/TaskManager?style=for-the-badge)](https://github.com/sunnybharti072006/TaskManager/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/sunnybharti072006/TaskManager?style=for-the-badge)](https://github.com/sunnybharti072006/TaskManager/network)
 [![GitHub issues](https://img.shields.io/github/issues/sunnybharti072006/TaskManager?style=for-the-badge)](https://github.com/sunnybharti072006/TaskManager/issues)
